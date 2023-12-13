@@ -14,6 +14,7 @@ export const GET = async (request: NextRequest) => {
 // POST -> /api/conversations
 export const POST = async (request: NextRequest) => {
   const data = await request.json();
-  const createdData = createConversation(data);
+  const { members } = data;
+  const createdData = await createConversation(members);
   return NextResponse.json(createdData);
 };

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getConversation } from "penly/service/conversation-service";
+import { getPathVariable } from "penly/utils/url";
 
-// GET -> /api/conversations/12
-export const GET = (request: NextRequest) => {
-  const pathVariable = "12";
-  const result = getConversation(pathVariable);
+export const GET = async (request: NextRequest) => {
+  const _id = getPathVariable(request, "/api/conversations/");
+  const result = await getConversation(_id);
   if (result === null) {
     return NextResponse.json({ message: "Not Found" }, { status: 404 });
   }

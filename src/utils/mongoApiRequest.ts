@@ -23,7 +23,7 @@ export const mongoApiRequest = async (action: MongoApiRequestType, collection: M
     );
     const { data } = axiosResponse;
     return { response: data };
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    return { error: error.response.data };
   }
 };
