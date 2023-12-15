@@ -3,18 +3,17 @@ import { createConversation, getAllConversations } from "penly/service/conversat
 
 // GET -> /api/conversations
 export const GET = async (request: NextRequest) => {
-  try {
-    const result = await getAllConversations();
-    return NextResponse.json(result);
-  } catch (error) {
-    console.error(error);
-  }
+  const { response, error } = await getAllConversations();
+  if (error) return NextResponse.json(error, { status: 500 });
+
+  return NextResponse.json(response);
 };
 
 // POST -> /api/conversations
 export const POST = async (request: NextRequest) => {
   const data = await request.json();
   const { members } = data;
-  const createdData = await createConversation(members);
-  return NextResponse.json(createdData);
+  const { response, error } = await createConversation(members);
+  if (error) return NextResponse.json(error, { status: 500 });
+  return NextResponse.json(response);
 };

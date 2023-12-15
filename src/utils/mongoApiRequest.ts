@@ -1,7 +1,7 @@
 import axios from "axios";
 
 type MongoApiRequestType = "find" | "findOne" | "insertOne" | "updateOne" | "deleteOne" | "aggregate";
-type MongoApiCollection = "conversations" | "chat";
+type MongoApiCollection = "conversations" | "chats";
 
 export const mongoApiRequest = async (action: MongoApiRequestType, collection: MongoApiCollection, body: object) => {
   try {
@@ -24,6 +24,8 @@ export const mongoApiRequest = async (action: MongoApiRequestType, collection: M
     const { data } = axiosResponse;
     return { response: data };
   } catch (error: any) {
-    return { error: error.response.data };
+    const realError = error.response.data;
+    console.error(realError);
+    return { error: realError };
   }
 };

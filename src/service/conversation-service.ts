@@ -1,17 +1,15 @@
 import { nanoid } from "nanoid";
-import { Conversation } from "penly/types";
+import { Conversation, SimpleResponse } from "penly/types";
 import { mongoApiRequest } from "penly/utils/mongoApiRequest";
 
-export const getAllConversations = async (): Promise<Conversation[]> => {
+export const getAllConversations = async (): Promise<SimpleResponse<Conversation[]>> => {
   const { response, error } = await mongoApiRequest("find", "conversations", {});
-  if (error) {
-    console.error(error);
-    return [];
-  }
-  return response.documents;
+  if (error) return { error };
+
+  return { response: response.documents };
 };
 
-export const createConversation = async (members: string[]): Promise<Conversation | null> => {
+export const createConversation = async (members: string[]): Promise<SimpleResponse<Conversation>> => {
   const newConversation = {
     _id: nanoid(),
     members,
@@ -21,18 +19,14 @@ export const createConversation = async (members: string[]): Promise<Conversatio
   const { response, error } = await mongoApiRequest("insertOne", "conversations", {
     document: newConversation,
   });
-  if (error) {
-    console.error(error);
-    return null;
-  }
-  return newConversation;
+  if (error) return { error };
+
+  return { response: newConversation };
 };
 
-export const getConversation = async (_id: string): Promise<Conversation | null> => {
+export const getConversation = async (_id: string): Promise<SimpleResponse<Conversation>> => {
   const { response, error } = await mongoApiRequest("findOne", "conversations", { filter: { _id } });
-  if (error) {
-    console.error(error);
-    return null;
-  }
-  return response;
+  if (error) return { error };
+
+  return { response };
 };

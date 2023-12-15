@@ -4,11 +4,11 @@ import { getPathVariable } from "penly/utils/url";
 
 export const GET = async (request: NextRequest) => {
   const _id = getPathVariable(request, "/api/conversations/");
-  const result = await getConversation(_id);
-  if (result === null) {
-    return NextResponse.json({ message: "Not Found" }, { status: 404 });
+  const { response, error } = await getConversation(_id);
+  if (error) {
+    return NextResponse.json(error, { status: 404 });
   }
-  return NextResponse.json(result);
+  return NextResponse.json(response);
 };
 
 // PATCH/PUT -> /api/conversations/12
