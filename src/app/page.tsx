@@ -1,21 +1,25 @@
 "use client";
 import axios from "axios";
+import { useUsers } from "penly/hooks/userUsers";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [user, setUser] = useState<User>();
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, setUser } = useUsers();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    axios
-      .get("/api/users/me")
-      .then(({ data }) => {
-        setUser(data.response);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+    if (!user) {
+      axios
+        .get("/api/users/me")
+        .then(({ data }) => {
+          setUser(data.response);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [user]);
 
   if (isLoading) return <>Loading...</>;
   if (user)
