@@ -18,4 +18,18 @@ model User {
   loggedAt  DateTime @default(now())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Chat      Chat[]
+}
+
+model Conversation {
+  id   String @id @default(nanoid()) @map("_id")
+  Chat Chat[]
+}
+
+model Chat {
+  id             String       @id @default(nanoid()) @map("_id")
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+  sender         User         @relation(fields: [senderId], references: [id])
+  senderId       String
 }
