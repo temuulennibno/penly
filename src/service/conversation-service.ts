@@ -1,32 +1,39 @@
+import { Conversation } from "@prisma/client";
 import { nanoid } from "nanoid";
-import { Conversation, SimpleResponse } from "penly/types";
-import { mongoApiRequest } from "penly/utils/mongoApiRequest";
+import { SimpleResponse } from "penly/types/simple-response";
+import { prisma } from "penly/utils/prisma";
 
 export const getAllConversations = async (): Promise<SimpleResponse<Conversation[]>> => {
-  const { response, error } = await mongoApiRequest("find", "conversations", {});
-  if (error) return { error };
-
-  return { response: response.documents };
+  try {
+    const response = await prisma.conversation.findMany({
+      include: {
+        users: { include: { user: true } },
+      },
+    });
+    return { response };
+  } catch (error) {
+    return { error };
+  }
 };
 
-export const createConversation = async (members: string[]): Promise<SimpleResponse<Conversation>> => {
-  const newConversation = {
-    _id: nanoid(),
-    members,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-  const { response, error } = await mongoApiRequest("insertOne", "conversations", {
-    document: newConversation,
-  });
-  if (error) return { error };
-
-  return { response: newConversation };
-};
-
-export const getConversation = async (_id: string): Promise<SimpleResponse<Conversation>> => {
-  const { response, error } = await mongoApiRequest("findOne", "conversations", { filter: { _id } });
-  if (error) return { error };
-
-  return { response };
+export const createConversation = async (users: string[]): Promise<SimpleResponse<Conversation>> => {
+  try {
+    const response = await prisma.conversation.create({
+      data: {
+        users: {
+          create: [
+            {
+              userId: users[0],
+            },
+            {
+              userId: users[1],
+            },
+          ],
+        },
+      },
+    });
+    return { response };
+  } catch (error) {
+    return { error };
+  }
 };

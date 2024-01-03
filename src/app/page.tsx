@@ -1,16 +1,16 @@
 "use client";
 
+import { User } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "penly/hooks/userUser";
-import { User } from "penly/types/Users";
 import { fetcher } from "penly/utils/fetcher";
 import useSWR from "swr";
 
 export default function Home() {
   const { user } = useUser();
-  const { data: usersData, isLoading: usersLoading, error: usersError } = useSWR("/api/users", fetcher);
-  console.log("usersData:", usersData);
+  const { data: conversationsData, isLoading: usersLoading, error: usersError } = useSWR("/api/conversations", fetcher);
+  console.log("conversationsData:", conversationsData);
 
   if (!user) return <div>loading...</div>;
 
@@ -21,12 +21,11 @@ export default function Home() {
         <p className="font-bold">{user.name}</p>
       </div>
       <div className="border-t border-b py-4 my-4 border-white/30">
-        {usersData?.map((user: User) => (
-          <Link href={`/new?to=${user.id}`} className="flex gap-6 items-center" key={user.id}>
-            <Image src={user.imageUrl} alt={user.name} width={48} height={48} className="rounded-full" />
+        {conversationsData?.map((conversation: any) => (
+          <Link href={`/conversations/${conversation.id}`} className="flex gap-6 items-center" key={conversation.id}>
+            {/* <Image src={`${user.imageUrl}`} alt={user.name} width={48} height={48} className="rounded-full" /> */}
             <div>
-              <p>{user.name}</p>
-              <p>Start conversation...</p>
+              <p>{conversation.id}</p>
             </div>
           </Link>
         ))}

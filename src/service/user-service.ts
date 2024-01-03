@@ -1,7 +1,8 @@
 import { Prisma, User } from "@prisma/client";
+import { SimpleResponse } from "penly/types/simple-response";
 import { prisma } from "penly/utils/prisma";
 
-export const authUser = async (email: string, name: string, imageUrl?: string): Promise<{ response?: User; error?: unknown }> => {
+export const authUser = async (email: string, name: string, imageUrl?: string): Promise<SimpleResponse<User>> => {
   const { response: existingUser, error: findError } = await getUserByEmail(email);
   if (findError) return { error: findError };
   if (existingUser) return { response: existingUser };
