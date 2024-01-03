@@ -1,4 +1,4 @@
-import { User } from "penly/types/Users";
+import { User } from "@prisma/client";
 import { create } from "zustand";
 
 type UseUserStore = {

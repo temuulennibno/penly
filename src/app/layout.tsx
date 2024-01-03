@@ -5,7 +5,7 @@ import { UserProvider } from "penly/providers/UserProvider";
 
 const roboto = Roboto({
   subsets: ["latin", "cyrillic-ext"],
-  weight: ["300", "400", "700"],
+  weight: ["300", "400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <UserProvider>
       <html lang="en">
-        <body className={`${roboto.className} bg-background`}>{children}</body>
+        <body className={`${roboto.className}`}>{children}</body>
       </html>
     </UserProvider>
   );

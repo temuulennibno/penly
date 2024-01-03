@@ -1,34 +1,47 @@
 "use client";
 
-import { User } from "@prisma/client";
 import Image from "next/image";
-import Link from "next/link";
+import { Loader } from "penly/components/Loader";
+import { ConversationRow } from "penly/components/conversation/ConversationRow";
 import { useUser } from "penly/hooks/userUser";
+import { Conversation } from "penly/types/conversation";
 import { fetcher } from "penly/utils/fetcher";
 import useSWR from "swr";
 
 export default function Home() {
   const { user } = useUser();
-  const { data: conversationsData, isLoading: usersLoading, error: usersError } = useSWR("/api/conversations", fetcher);
-  console.log("conversationsData:", conversationsData);
+  const { data, isLoading, error } = useSWR("/api/conversations", fetcher);
 
-  if (!user) return <div>loading...</div>;
+  if (!user || isLoading || error) return <Loader />;
 
   return (
-    <div className="flex w-full h-screen flex-col py-12 px-9">
-      <div className="flex gap-4 items-center">
-        <Image src={user.imageUrl} alt={user.name} width={36} height={36} className="rounded-full" />
-        <p className="font-bold">{user.name}</p>
-      </div>
-      <div className="border-t border-b py-4 my-4 border-white/30">
-        {conversationsData?.map((conversation: any) => (
-          <Link href={`/conversations/${conversation.id}`} className="flex gap-6 items-center" key={conversation.id}>
-            {/* <Image src={`${user.imageUrl}`} alt={user.name} width={48} height={48} className="rounded-full" /> */}
-            <div>
-              <p>{conversation.id}</p>
+    <div>
+      <div className="flex justify-between py-3 px-4">
+        <div className=" flex items-center gap-3">
+          <div className="avatar">
+            <div className="w-10 rounded-full">
+              <Image src={`${user.imageUrl}`} width={40} height={40} alt={user.name} />
             </div>
-          </Link>
-        ))}
+          </div>
+          <div className="text-3xl font-bold">Chats</div>
+        </div>
+        <div>
+          <button className="btn btn-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+              <path d="M13.5 6.5l4 4" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div className="p-4">
+        <input type="text" placeholder="Search" className="input w-full input-bordered" />
+      </div>
+      <div>
+        {data.map((conversation: Conversation) => {
+          return <ConversationRow key={conversation.id} conversation={conversation} />;
+        })}
       </div>
     </div>
   );
