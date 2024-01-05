@@ -2,9 +2,12 @@ import { Conversation } from "@prisma/client";
 import { SimpleResponse } from "penly/types/simple-response";
 import { prisma } from "penly/utils/prisma";
 
-export const getAllConversations = async (): Promise<SimpleResponse<Conversation[]>> => {
+export const getAllConversations = async (userId: string): Promise<SimpleResponse<Conversation[]>> => {
   try {
     const response = await prisma.conversation.findMany({
+      where: {
+        users: { some: { userId } },
+      },
       include: {
         users: { include: { user: true } },
       },

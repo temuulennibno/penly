@@ -1,13 +1,10 @@
 "use client";
-import { Chat } from "@prisma/client";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { Loader } from "penly/components/Loader";
 import { useUser } from "penly/hooks/userUser";
 import { fetcher } from "penly/utils/fetcher";
 import { getConversationPartner } from "penly/utils/get-partner";
-import { useState } from "react";
 import useSWR from "swr";
 
 export default function Page({ params }: { params: { conversationId: string } }) {

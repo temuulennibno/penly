@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { authUser } from "penly/service/user-service";
 
 export const GET = withApiAuthRequired(async function myApiRoute(req) {
-  console.log("Hello from Route.ts");
   const res = new NextResponse();
   const { user }: any = await getSession(req, res);
   if (!user) return NextResponse.json({ error: "User not authorized!" }, { status: 401 });
